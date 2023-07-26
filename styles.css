@@ -7,7 +7,7 @@ div {
 }
 
 #faultyItems {
-   visibility: hidden;   
+   visibility: hidden;
 }
 
 #launchForm {
@@ -50,4 +50,24 @@ button {
    width: 25%;
    height: 30px;
    margin: 10px 0;
+}
+
+#launchStatus {
+   color: #419F6A;
+   /* Default color for shuttle ready */
+}
+
+#launchStatusCheck.visible #launchStatus {
+   color: red;
+   /* Color for shuttle not ready */
+}
+
+#launchStatusCheck.visible #faultyItems {
+   visibility: visible;
+   /* Show the faultyItems list when shuttle not ready */
+}
+
+#launchStatusCheck.visible #launchStatus.color-red {
+   color: #C7254E;
+   /* Specific color for cargo mass too high */
 }
