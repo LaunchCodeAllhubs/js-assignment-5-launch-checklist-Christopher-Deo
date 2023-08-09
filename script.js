@@ -1,80 +1,36 @@
+// Write your JavaScript code here!
+//const { myFetch } = require("./scriptHelper");
 window.addEventListener("load", function () {
+
+
     let listedPlanets;
     // Set listedPlanetsResponse equal to the value returned by calling myFetch()
     let listedPlanetsResponse = myFetch();
-
-    const form = document.querySelector('form[data-testid="testForm"]');
-    form.addEventListener("submit", function (event) {
-        event.preventDefault();
-
-        const pilotNameInput = document.querySelector('input[name="pilotName"]');
-        const copilotNameInput = document.querySelector('input[name="copilotName"]');
-        const fuelLevelInput = document.querySelector('input[name="fuelLevel"]');
-        const cargoMassInput = document.querySelector('input[name="cargoMass"]');
-
-        const pilotName = pilotNameInput.value;
-        const copilotName = copilotNameInput.value;
-        const fuelLevel = fuelLevelInput.value;
-        const cargoMass = cargoMassInput.value;
-
-        if (!pilotName || !copilotName || !fuelLevel || !cargoMass) {
-            alert("All fields are required!");
-            return;
-        }
-
-        if (!isNaN(pilotName) || !isNaN(copilotName)) {
-            alert("Names should be text!");
-            return;
-        }
-
-        if (isNaN(fuelLevel) || isNaN(cargoMass)) {
-            alert("Fuel level and cargo mass should be numbers!");
-            return;
-        }
-
-        document.getElementById("pilotStatus").textContent = `Pilot ${pilotName} is ready for launch`;
-        document.getElementById("copilotStatus").textContent = `Co-pilot ${copilotName} is ready for launch`;
-
-        if (fuelLevel < 10000) {
-            document.getElementById("fuelStatus").textContent = "Fuel level too low for launch";
-            document.getElementById("launchStatus").textContent = "Shuttle Not Ready for Launch";
-            document.getElementById("launchStatus").style.color = "#C7254E";
-            document.getElementById("faultyItems").style.visibility = "visible";
-        } else {
-            document.getElementById("fuelStatus").textContent = "Fuel level high enough for launch";
-        }
-
-        if (cargoMass > 10000) {
-            document.getElementById("cargoStatus").textContent = "Cargo mass too heavy for launch";
-            document.getElementById("launchStatus").textContent = "Shuttle Not Ready for Launch";
-            document.getElementById("launchStatus").style.color = "#C7254E";
-            document.getElementById("faultyItems").style.visibility = "visible";
-        } else {
-            document.getElementById("cargoStatus").textContent = "Cargo mass low enough for launch";
-        }
-
-        if (fuelLevel >= 10000 && cargoMass <= 10000) {
-            document.getElementById("launchStatus").textContent = "Shuttle is Ready for Launch";
-            document.getElementById("launchStatus").style.color = "#419F6A";
-            document.getElementById("faultyItems").style.visibility = "hidden";
-        }
-    });
-
     listedPlanetsResponse.then(function (result) {
         listedPlanets = result;
         console.log(listedPlanets);
+    }).then(function () {
+        console.log(listedPlanets);
+        let selectedPlanet = pickPlanet(listedPlanets);
+        let name = selectedPlanet.name;
+        let diameter = selectedPlanet.diameter;
+        let star = selectedPlanet.star;
+        let distance = selectedPlanet.distance;
+        let moons = selectedPlanet.moons;
+        let imageUrl = selectedPlanet.image;
+        addDestinationInfo(document, name, diameter, star, distance, moons, imageUrl);
+    });
 
-        const randomPlanet = pickPlanet(listedPlanets);
-        addDestinationInfo(
-            document,
-            randomPlanet.name,
-            randomPlanet.diameter,
-            randomPlanet.star,
-            randomPlanet.distance,
-            randomPlanet.moons,
-            randomPlanet.image
-        );
-    }).catch(function (error) {
-        console.log('Error fetching planets:', error);
+    let form = document.querySelector("form");
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        let list = document.getElementById("faultyItems");
+        let pilot = document.querySelector("input[name=pilotName]").value;
+        let copilot = document.querySelector("input[name=copilotName]").value;
+        let fuelLevel = document.querySelector("input[name=fuelLevel]").value;
+        let cargoLevel = document.querySelector("input[name=cargoMass]").value;
+        list.style.visibility = "hidden";
+
+        formSubmission(document, list, pilot, copilot, fuelLevel, cargoLevel);
     });
 });
